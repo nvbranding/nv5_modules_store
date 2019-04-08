@@ -23,7 +23,7 @@ foreach($global_array_cat as $catalog)
 {
 	if($catalog['id'] > 0)
 	{
-		$list_row = $db->query('SELECT * FROM '. TMS_STORE . '_rows WHERE status > 0 AND catalog ='.$catalog['id'].' limit '.$per_home)->fetchAll();
+		$list_row = $db->query('SELECT * FROM '. STORE . '_rows WHERE status > 0 AND catalog ='.$catalog['id'].' limit '.$per_home)->fetchAll();
 		foreach($list_row as $item)
 		{	
 			$item['link'] = nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $item['alias'],true);
@@ -45,7 +45,7 @@ foreach($global_array_cat as $catalog)
 {
 	if($catalog['id'] > 0)
 	{
-		$list_row = $db->query('SELECT * FROM '. TMS_STORE . '_rows WHERE status > 0 AND catalog ='.$catalog['id'].' limit '.$per_home)->fetchAll();
+		$list_row = $db->query('SELECT * FROM '. STORE . '_rows WHERE status > 0 AND catalog ='.$catalog['id'].' limit '.$per_home)->fetchAll();
 		foreach($list_row as $item)
 		{	
 			$item['link'] = nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $item['alias'],true);
@@ -64,7 +64,7 @@ if ($page_config['viewtype'] == 2) {
 			$page = $nv_Request->get_int( 'page', 'post,get', 1 );
 			$db->sqlreset()
 				->select( 'COUNT(*)' )
-				->from( '' . TMS_STORE . '_rows' )
+				->from( '' . STORE . '_rows' )
 				->where('status=1');
 			$sth = $db->prepare( $db->sql() );
 
@@ -100,7 +100,7 @@ if ($page_config['viewtype'] == 3) {
 			$page = $nv_Request->get_int( 'page', 'post,get', 1 );
 			$db->sqlreset()
 				->select( 'COUNT(*)' )
-				->from( '' . TMS_STORE . '_rows' )
+				->from( '' . STORE . '_rows' )
 				->where('status=1');
 			$sth = $db->prepare( $db->sql() );
 

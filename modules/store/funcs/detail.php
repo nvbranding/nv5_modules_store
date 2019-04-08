@@ -30,13 +30,13 @@ if($id > 0)
 	 $time_set = $nv_Request->get_int($module_data . '_' . $op . '_' . $id, 'session');
     if (empty($time_set)) {
         $nv_Request->set_Session($module_data . '_' . $op . '_' . $id, NV_CURRENTTIME);
-        $sql = 'UPDATE ' .TMS_STORE . '_rows SET hitstotal=hitstotal+1 WHERE id=' . $id;
+        $sql = 'UPDATE ' .STORE . '_rows SET hitstotal=hitstotal+1 WHERE id=' . $id;
         $db->query($sql);
     }
 	
 
 	
-	$array_data = $db->query("SELECT * FROM ". TMS_STORE . "_rows WHERE status > 0 AND id =" .$id)->fetch();
+	$array_data = $db->query("SELECT * FROM ". STORE . "_rows WHERE status > 0 AND id =" .$id)->fetch();
 	$page_title = empty($array_data['title_seo']) ? $array_data['title'] : $array_data['title_seo'];
 	$description = empty($array_data['bodytext_seo']) ? nv_clean60(strip_tags($array_data['bodytext']), 160) : $array_data['bodytext_seo'];
 	$key_words = empty($array_data['keywords']) ? $global_config['site_description'] : $array_data['keywords']; 
@@ -47,7 +47,7 @@ if($id > 0)
 	// DANH SÁCH CỬA HÀNG CÙNG QUẬN 
 	// LẤY DANH SÁCH CỬA HÀNG
 		$array_lienquan = array();
-		$list_row = $db->query('SELECT * FROM '. TMS_STORE . '_rows WHERE status > 0 AND id !='. $id .' AND tinhthanh ='.$array_data['tinhthanh'] .' AND quanhuyen ='.$array_data['quanhuyen'].' limit '.$related_articles)->fetchAll();
+		$list_row = $db->query('SELECT * FROM '. STORE . '_rows WHERE status > 0 AND id !='. $id .' AND tinhthanh ='.$array_data['tinhthanh'] .' AND quanhuyen ='.$array_data['quanhuyen'].' limit '.$related_articles)->fetchAll();
 		
 		foreach($list_row as $itemlq)
 		{

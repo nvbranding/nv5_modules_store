@@ -23,12 +23,12 @@ if( $nv_Request->isset_request( 'change_status', 'post, get' ) )
 	$id = $nv_Request->get_int( 'id', 'post, get', 0 );
 	$content = 'NO_' . $id;
 
-	$query = 'SELECT status FROM ' . TMS_STORE . '_block WHERE id=' . $id;
+	$query = 'SELECT status FROM ' . STORE . '_block WHERE id=' . $id;
 	$row = $db->query( $query )->fetch();
 	if( isset( $row['status'] ) )
 	{
 		$status = ( $row['status'] ) ? 0 : 1;
-		$query = 'UPDATE ' . TMS_STORE . '_block SET status=' . intval( $status ) . ' WHERE id=' . $id;
+		$query = 'UPDATE ' . STORE . '_block SET status=' . intval( $status ) . ' WHERE id=' . $id;
 		$db->query( $query );
 		$content = 'OK_' . $id;
 	}
@@ -46,17 +46,17 @@ if( $nv_Request->isset_request( 'ajax_action', 'post' ) )
 	$content = 'NO_' . $id;
 	if( $new_vid > 0 )
 	{
-		$sql = 'SELECT id FROM ' . TMS_STORE . '_block WHERE id!=' . $id . ' ORDER BY weight ASC';
+		$sql = 'SELECT id FROM ' . STORE . '_block WHERE id!=' . $id . ' ORDER BY weight ASC';
 		$result = $db->query( $sql );
 		$weight = 0;
 		while( $row = $result->fetch() )
 		{
 			++$weight;
 			if( $weight == $new_vid ) ++$weight;
-			$sql = 'UPDATE ' . TMS_STORE . '_block SET weight=' . $weight . ' WHERE id=' . $row['id'];
+			$sql = 'UPDATE ' . STORE . '_block SET weight=' . $weight . ' WHERE id=' . $row['id'];
 			$db->query( $sql );
 		}
-		$sql = 'UPDATE ' . TMS_STORE . '_block SET weight=' . $new_vid . ' WHERE id=' . $id;
+		$sql = 'UPDATE ' . STORE . '_block SET weight=' . $new_vid . ' WHERE id=' . $id;
 		$db->query( $sql );
 		$content = 'OK_' . $id;
 	}
@@ -76,19 +76,19 @@ if ( $nv_Request->isset_request( 'delete_id', 'get' ) and $nv_Request->isset_req
 		
 		
 		$weight=0;
-		$sql = 'SELECT weight FROM ' . TMS_STORE . '_block WHERE id =' . $db->quote( $id );
+		$sql = 'SELECT weight FROM ' . STORE . '_block WHERE id =' . $db->quote( $id );
 		$result = $db->query( $sql );
 		list( $weight) = $result->fetch( 3 );
 		
-		$db->query('DELETE FROM ' . TMS_STORE . '_block  WHERE id = ' . $db->quote( $id ) );
+		$db->query('DELETE FROM ' . STORE . '_block  WHERE id = ' . $db->quote( $id ) );
 		if( $weight > 0)
 		{
-			$sql = 'SELECT id, weight FROM ' . TMS_STORE . '_block WHERE weight >' . $weight;
+			$sql = 'SELECT id, weight FROM ' . STORE . '_block WHERE weight >' . $weight;
 			$result = $db->query( $sql );
 			while(list( $id, $weight) = $result->fetch( 3 ))
 			{
 				$weight--;
-				$db->query( 'UPDATE ' . TMS_STORE . '_block SET weight=' . $weight . ' WHERE id=' . intval( $id ));
+				$db->query( 'UPDATE ' . STORE . '_block SET weight=' . $weight . ' WHERE id=' . intval( $id ));
 			}
 		}
 		
@@ -120,9 +120,9 @@ if ( $nv_Request->isset_request( 'submit', 'post' ) )
 		{
 			if( empty( $row['id'] ) )
 			{
-				$stmt = $db->prepare( 'INSERT INTO ' . TMS_STORE . '_block (title,  weight, status) VALUES (:title, :weight, :status)' );
+				$stmt = $db->prepare( 'INSERT INTO ' . STORE . '_block (title,  weight, status) VALUES (:title, :weight, :status)' );
 
-				$weight = $db->query( 'SELECT max(weight) FROM ' . TMS_STORE . '_block' )->fetchColumn();
+				$weight = $db->query( 'SELECT max(weight) FROM ' . STORE . '_block' )->fetchColumn();
 				$weight = intval( $weight ) + 1;
 				$stmt->bindParam( ':weight', $weight, PDO::PARAM_INT );
 
@@ -132,7 +132,7 @@ if ( $nv_Request->isset_request( 'submit', 'post' ) )
 			}
 			else
 			{
-				$stmt = $db->prepare( 'UPDATE ' . TMS_STORE . '_block SET title = :title  WHERE id=' . $row['id'] );
+				$stmt = $db->prepare( 'UPDATE ' . STORE . '_block SET title = :title  WHERE id=' . $row['id'] );
 			}
 			$stmt->bindParam( ':title', $row['title'], PDO::PARAM_STR );
 		
@@ -157,7 +157,7 @@ if ( $nv_Request->isset_request( 'submit', 'post' ) )
 }
 elseif( $row['id'] > 0 )
 {
-	$row = $db->query( 'SELECT * FROM ' . TMS_STORE . '_block WHERE id=' . $row['id'] )->fetch();
+	$row = $db->query( 'SELECT * FROM ' . STORE . '_block WHERE id=' . $row['id'] )->fetch();
 	if( empty( $row ) )
 	{
 		Header( 'Location: ' . NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op );
@@ -183,7 +183,7 @@ if ( ! $nv_Request->isset_request( 'id', 'post,get' ) )
 	$page = $nv_Request->get_int( 'page', 'post,get', 1 );
 	$db->sqlreset()
 		->select( 'COUNT(*)' )
-		->from( '' . TMS_STORE . '_block' );
+		->from( '' . STORE . '_block' );
 
 	if( ! empty( $q ) )
 	{

@@ -23,12 +23,12 @@ if( $nv_Request->isset_request( 'change_status', 'post, get' ) )
 	$id = $nv_Request->get_int( 'id', 'post, get', 0 );
 	$content = 'NO_' . $id;
 
-	$query = 'SELECT status FROM ' . TMS_STORE . '_catalogy WHERE id=' . $id;
+	$query = 'SELECT status FROM ' . STORE . '_catalogy WHERE id=' . $id;
 	$row = $db->query( $query )->fetch();
 	if( isset( $row['status'] ) )
 	{
 		$status = ( $row['status'] ) ? 0 : 1;
-		$query = 'UPDATE ' . TMS_STORE . '_catalogy SET status=' . intval( $status ) . ' WHERE id=' . $id;
+		$query = 'UPDATE ' . STORE . '_catalogy SET status=' . intval( $status ) . ' WHERE id=' . $id;
 		$db->query( $query );
 		$content = 'OK_' . $id;
 	}
@@ -46,17 +46,17 @@ if( $nv_Request->isset_request( 'ajax_action', 'post' ) )
 	$content = 'NO_' . $id;
 	if( $new_vid > 0 )
 	{
-		$sql = 'SELECT id FROM ' . TMS_STORE . '_catalogy WHERE id!=' . $id . ' ORDER BY weight ASC';
+		$sql = 'SELECT id FROM ' . STORE . '_catalogy WHERE id!=' . $id . ' ORDER BY weight ASC';
 		$result = $db->query( $sql );
 		$weight = 0;
 		while( $row = $result->fetch() )
 		{
 			++$weight;
 			if( $weight == $new_vid ) ++$weight;
-			$sql = 'UPDATE ' . TMS_STORE . '_catalogy SET weight=' . $weight . ' WHERE id=' . $row['id'];
+			$sql = 'UPDATE ' . STORE . '_catalogy SET weight=' . $weight . ' WHERE id=' . $row['id'];
 			$db->query( $sql );
 		}
-		$sql = 'UPDATE ' . TMS_STORE . '_catalogy SET weight=' . $new_vid . ' WHERE id=' . $id;
+		$sql = 'UPDATE ' . STORE . '_catalogy SET weight=' . $new_vid . ' WHERE id=' . $id;
 		$db->query( $sql );
 		$content = 'OK_' . $id;
 	}
@@ -73,24 +73,24 @@ if ( $nv_Request->isset_request( 'delete_id', 'get' ) and $nv_Request->isset_req
 	if( $id > 0 and $delete_checkss == md5( $id . NV_CACHE_PREFIX . $client_info['session_id'] ) )
 	{
 		// DELETE alias
-		$check_alias = new NukeViet\TMS\Checkalias;
+		$check_alias = new NukeViet\Alias\Checkalias;
 		$check_alias->delete_alias_catalogy_news($id, $module_name, 'catalogy');
 		
 		
 		$weight=0;
-		$sql = 'SELECT weight FROM ' . TMS_STORE . '_catalogy WHERE id =' . $db->quote( $id );
+		$sql = 'SELECT weight FROM ' . STORE . '_catalogy WHERE id =' . $db->quote( $id );
 		$result = $db->query( $sql );
 		list( $weight) = $result->fetch( 3 );
 		
-		$db->query('DELETE FROM ' . TMS_STORE . '_catalogy  WHERE id = ' . $db->quote( $id ) );
+		$db->query('DELETE FROM ' . STORE . '_catalogy  WHERE id = ' . $db->quote( $id ) );
 		if( $weight > 0)
 		{
-			$sql = 'SELECT id, weight FROM ' . TMS_STORE . '_catalogy WHERE weight >' . $weight;
+			$sql = 'SELECT id, weight FROM ' . STORE . '_catalogy WHERE weight >' . $weight;
 			$result = $db->query( $sql );
 			while(list( $id, $weight) = $result->fetch( 3 ))
 			{
 				$weight--;
-				$db->query( 'UPDATE ' . TMS_STORE . '_catalogy SET weight=' . $weight . ' WHERE id=' . intval( $id ));
+				$db->query( 'UPDATE ' . STORE . '_catalogy SET weight=' . $weight . ' WHERE id=' . intval( $id ));
 			}
 		}
 		
@@ -130,7 +130,7 @@ if ( $nv_Request->isset_request( 'submit', 'post' ) )
 		
 	// KIỂM TRA TRÙNG ALIAS
 	
-	$check_alias = new NukeViet\TMS\Checkalias;
+	$check_alias = new NukeViet\Alias\Checkalias;
 	
 	$check_return = $check_alias->check_catid_alias($row['id'], $row['alias']);
 	//print_r($check_alias->check);die;
@@ -155,9 +155,9 @@ if ( $nv_Request->isset_request( 'submit', 'post' ) )
 		{
 			if( empty( $row['id'] ) )
 			{
-				$stmt = $db->prepare( 'INSERT INTO ' . TMS_STORE . '_catalogy (title, alias, image, bodytext, keywords, title_seo, bodytext_seo, weight, status) VALUES (:title, :alias, :image, :bodytext, :keywords, :title_seo, :bodytext_seo, :weight, :status)' );
+				$stmt = $db->prepare( 'INSERT INTO ' . STORE . '_catalogy (title, alias, image, bodytext, keywords, title_seo, bodytext_seo, weight, status) VALUES (:title, :alias, :image, :bodytext, :keywords, :title_seo, :bodytext_seo, :weight, :status)' );
 
-				$weight = $db->query( 'SELECT max(weight) FROM ' . TMS_STORE . '_catalogy' )->fetchColumn();
+				$weight = $db->query( 'SELECT max(weight) FROM ' . STORE . '_catalogy' )->fetchColumn();
 				$weight = intval( $weight ) + 1;
 				$stmt->bindParam( ':weight', $weight, PDO::PARAM_INT );
 
@@ -167,7 +167,7 @@ if ( $nv_Request->isset_request( 'submit', 'post' ) )
 			}
 			else
 			{
-				$stmt = $db->prepare( 'UPDATE ' . TMS_STORE . '_catalogy SET title = :title, alias = :alias, image = :image, bodytext = :bodytext, keywords = :keywords, title_seo =:title_seo, bodytext_seo =:bodytext_seo  WHERE id=' . $row['id'] );
+				$stmt = $db->prepare( 'UPDATE ' . STORE . '_catalogy SET title = :title, alias = :alias, image = :image, bodytext = :bodytext, keywords = :keywords, title_seo =:title_seo, bodytext_seo =:bodytext_seo  WHERE id=' . $row['id'] );
 			}
 			$stmt->bindParam( ':title', $row['title'], PDO::PARAM_STR );
 			$stmt->bindParam( ':title_seo', $row['title_seo'], PDO::PARAM_STR );
@@ -203,7 +203,7 @@ if ( $nv_Request->isset_request( 'submit', 'post' ) )
 }
 elseif( $row['id'] > 0 )
 {
-	$row = $db->query( 'SELECT * FROM ' . TMS_STORE . '_catalogy WHERE id=' . $row['id'] )->fetch();
+	$row = $db->query( 'SELECT * FROM ' . STORE . '_catalogy WHERE id=' . $row['id'] )->fetch();
 	if( empty( $row ) )
 	{
 		Header( 'Location: ' . NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op );
@@ -245,7 +245,7 @@ if ( ! $nv_Request->isset_request( 'id', 'post,get' ) )
 	$page = $nv_Request->get_int( 'page', 'post,get', 1 );
 	$db->sqlreset()
 		->select( 'COUNT(*)' )
-		->from( '' . TMS_STORE . '_catalogy' );
+		->from( '' . STORE . '_catalogy' );
 
 	if( ! empty( $q ) )
 	{

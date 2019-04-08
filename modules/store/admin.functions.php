@@ -9,8 +9,8 @@
  */
 
 if ( ! defined( 'NV_ADMIN' ) or ! defined( 'NV_MAINFILE' ) or ! defined( 'NV_IS_MODADMIN' ) ) die( 'Stop!!!' );
-define('TMS_STORE', $db_config['dbsystem']. '.' .NV_PREFIXLANG. '_' . $module_data);
-define('TMS_STORE_ADD', $db_config['dbsystem']. '.' .$db_config['prefix']. '_location');
+define('STORE', $db_config['dbsystem']. '.' .NV_PREFIXLANG. '_' . $module_data);
+define('STORE_ADD', $db_config['dbsystem']. '.' .$db_config['prefix']. '_location');
 define( 'NV_IS_FILE_ADMIN', true );
 
 

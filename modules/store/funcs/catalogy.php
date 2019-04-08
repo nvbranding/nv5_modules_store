@@ -23,7 +23,7 @@ if($catid > 0)
 		$key_words = empty($global_array_cat[$catid]['keywords']) ? $global_config['site_description'] : $global_array_cat[$catid]['keywords']; 
 	
 		// LẤY DANH SÁCH CỬA HÀNG
-		//$list_row = $db->query('SELECT * FROM '. TMS_STORE . '_rows WHERE status > 0 AND catalog ='.$catid)->fetchAll();
+		//$list_row = $db->query('SELECT * FROM '. STORE . '_rows WHERE status > 0 AND catalog ='.$catid)->fetchAll();
 		
 			$base_url = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_cat[$catid]['alias'];
 		
@@ -31,7 +31,7 @@ if($catid > 0)
 			$page = $nv_Request->get_int( 'page', 'post,get', 1 );
 			$db->sqlreset()
 				->select( 'COUNT(*)' )
-				->from( '' . TMS_STORE . '_rows' )
+				->from( '' . STORE . '_rows' )
 				->where('status = 1 AND catalog ='.$catid);
 
 			$sth = $db->prepare( $db->sql() );

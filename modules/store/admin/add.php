@@ -20,7 +20,7 @@ if( $nv_Request->isset_request( 'city_id_ajax', 'post, get' ) )
 
 	if( $city_id && $token )
 	{
-		$sql = 'SELECT districtid, type, title FROM ' . TMS_STORE_ADD. '_district WHERE status = 1 AND provinceid= ' . intval( $city_id ) . ' ORDER BY weight ASC';
+		$sql = 'SELECT districtid, type, title FROM ' . STORE_ADD. '_district WHERE status = 1 AND provinceid= ' . intval( $city_id ) . ' ORDER BY weight ASC';
 		$result = $db_slave->query( $sql );
 
 		while( $row = $result->fetch() )
@@ -43,7 +43,7 @@ if( $nv_Request->isset_request( 'district_id_ajax', 'post, get' ) )
 
 	if( $district_id && $token )
 	{
-		$sql = 'SELECT wardid, type, title FROM ' . TMS_STORE_ADD . '_ward WHERE status = 1 AND districtid= ' . intval( $district_id );
+		$sql = 'SELECT wardid, type, title FROM ' . STORE_ADD . '_ward WHERE status = 1 AND districtid= ' . intval( $district_id );
 		$result = $db_slave->query( $sql );
 		//die($sql);
 		/* $myObj = array();
@@ -73,7 +73,7 @@ if($nv_Request->isset_request('id_tinhthanh', 'get'))
 	$id_tinhthanh = $nv_Request->get_int('id_tinhthanh','get', 0);
 	if($id_tinhthanh > 0)
 	{
-		$list_quan = $db->query('SELECT * FROM '.TMS_STORE_ADD.'_district WHERE status = 1 and city_id = '. $id_tinhthanh .' ORDER BY weight ASC')->fetchAll();
+		$list_quan = $db->query('SELECT * FROM '.STORE_ADD.'_district WHERE status = 1 and city_id = '. $id_tinhthanh .' ORDER BY weight ASC')->fetchAll();
 		$html = '<option value=0>-- Chọn quận huyện --</option>';
 					foreach($list_quan as $l)
 					{
@@ -89,7 +89,7 @@ if($nv_Request->isset_request('id_quanhuyen', 'get'))
 	$id_quanhuyen = $nv_Request->get_int('id_quanhuyen','get', 0);
 	if($id_quanhuyen > 0)
 	{//print($id_quanhuyen);die;
-		$list_quan = $db->query('SELECT * FROM '.TMS_STORE_ADD.'_ward WHERE status = 1 and district_id = '. $id_quanhuyen .' ORDER BY title ASC')->fetchAll();
+		$list_quan = $db->query('SELECT * FROM '.STORE_ADD.'_ward WHERE status = 1 and district_id = '. $id_quanhuyen .' ORDER BY title ASC')->fetchAll();
 		$html = '<option value=0>-- Chọn xã phường --</option>';
 					foreach($list_quan as $l)
 					{
@@ -106,12 +106,12 @@ if( $nv_Request->isset_request( 'change_status', 'post, get' ) )
 	$id = $nv_Request->get_int( 'id', 'post, get', 0 );
 	$content = 'NO_' . $id;
 
-	$query = 'SELECT status FROM ' . TMS_STORE . '_rows WHERE id=' . $id;
+	$query = 'SELECT status FROM ' . STORE . '_rows WHERE id=' . $id;
 	$row = $db->query( $query )->fetch();
 	if( isset( $row['status'] ) )
 	{
 		$status = ( $row['status'] ) ? 0 : 1;
-		$query = 'UPDATE ' . TMS_STORE . '_rows SET status=' . intval( $status ) . ' WHERE id=' . $id;
+		$query = 'UPDATE ' . STORE . '_rows SET status=' . intval( $status ) . ' WHERE id=' . $id;
 		$db->query( $query );
 		$content = 'OK_' . $id;
 	}
@@ -129,17 +129,17 @@ if( $nv_Request->isset_request( 'ajax_action', 'post' ) )
 	$content = 'NO_' . $id;
 	if( $new_vid > 0 )
 	{
-		$sql = 'SELECT id FROM ' . TMS_STORE . '_rows WHERE id!=' . $id . ' ORDER BY weight ASC';
+		$sql = 'SELECT id FROM ' . STORE . '_rows WHERE id!=' . $id . ' ORDER BY weight ASC';
 		$result = $db->query( $sql );
 		$weight = 0;
 		while( $row = $result->fetch() )
 		{
 			++$weight;
 			if( $weight == $new_vid ) ++$weight;
-			$sql = 'UPDATE ' . TMS_STORE . '_rows SET weight=' . $weight . ' WHERE id=' . $row['id'];
+			$sql = 'UPDATE ' . STORE . '_rows SET weight=' . $weight . ' WHERE id=' . $row['id'];
 			$db->query( $sql );
 		}
-		$sql = 'UPDATE ' . TMS_STORE . '_rows SET weight=' . $new_vid . ' WHERE id=' . $id;
+		$sql = 'UPDATE ' . STORE . '_rows SET weight=' . $new_vid . ' WHERE id=' . $id;
 		$db->query( $sql );
 		$content = 'OK_' . $id;
 	}
@@ -157,19 +157,19 @@ if ( $nv_Request->isset_request( 'delete_id', 'get' ) and $nv_Request->isset_req
 	{
 		
 		$weight=0;
-		$sql = 'SELECT weight FROM ' . TMS_STORE . '_rows WHERE id =' . $db->quote( $id );
+		$sql = 'SELECT weight FROM ' . STORE . '_rows WHERE id =' . $db->quote( $id );
 		$result = $db->query( $sql );
 		list( $weight) = $result->fetch( 3 );
 		
-		$db->query('DELETE FROM ' . TMS_STORE . '_rows  WHERE id = ' . $db->quote( $id ) );
+		$db->query('DELETE FROM ' . STORE . '_rows  WHERE id = ' . $db->quote( $id ) );
 		if( $weight > 0)
 		{
-			$sql = 'SELECT id, weight FROM ' . TMS_STORE . '_rows WHERE weight >' . $weight;
+			$sql = 'SELECT id, weight FROM ' . STORE . '_rows WHERE weight >' . $weight;
 			$result = $db->query( $sql );
 			while(list( $id, $weight) = $result->fetch( 3 ))
 			{
 				$weight--;
-				$db->query( 'UPDATE ' . TMS_STORE . '_rows SET weight=' . $weight . ' WHERE id=' . intval( $id ));
+				$db->query( 'UPDATE ' . STORE . '_rows SET weight=' . $weight . ' WHERE id=' . intval( $id ));
 			}
 		}
 		$nv_Cache->delMod( $module_name );
@@ -243,7 +243,7 @@ if( is_file( NV_DOCUMENT_ROOT . $row['image'] ) )
 	
 	// KIỂM TRA TRÙNG ALIAS
 	
-	$check_alias = new NukeViet\TMS\Checkalias;
+	$check_alias = new NukeViet\Alias\Checkalias;
 	
 	$check_return = $check_alias->check_id_alias($row['id'], $row['alias']);
 	
@@ -279,10 +279,10 @@ if( is_file( NV_DOCUMENT_ROOT . $row['image'] ) )
 				$row['add_time'] = 0;
 				
 				
-				$stmt = $db->prepare( 'INSERT INTO ' . TMS_STORE . '_rows (title, alias, catalog, sdt, email, website, facebook,  image, images_orther, bodytext, keywords, title_seo, bodytext_seo, tinhthanh, quanhuyen, xaphuong, duong, dia_chi, dia_chi_day_du, googmaps, add_time, weight, status) VALUES (:title, :alias, :catalog, :sdt,:email,:website,:facebook, :image, :images_orther, :bodytext, :keywords,  :title_seo, :bodytext_seo, :tinhthanh, :quanhuyen, :xaphuong, :duong, :dia_chi, :dia_chi_day_du, :googmaps, :add_time, :weight, :status)' );
+				$stmt = $db->prepare( 'INSERT INTO ' . STORE . '_rows (title, alias, catalog, sdt, email, website, facebook,  image, images_orther, bodytext, keywords, title_seo, bodytext_seo, tinhthanh, quanhuyen, xaphuong, duong, dia_chi, dia_chi_day_du, googmaps, add_time, weight, status) VALUES (:title, :alias, :catalog, :sdt,:email,:website,:facebook, :image, :images_orther, :bodytext, :keywords,  :title_seo, :bodytext_seo, :tinhthanh, :quanhuyen, :xaphuong, :duong, :dia_chi, :dia_chi_day_du, :googmaps, :add_time, :weight, :status)' );
 
 				$stmt->bindParam( ':add_time', $row['add_time'], PDO::PARAM_INT );
-				$weight = $db->query( 'SELECT max(weight) FROM ' . TMS_STORE . '_rows' )->fetchColumn();
+				$weight = $db->query( 'SELECT max(weight) FROM ' . STORE . '_rows' )->fetchColumn();
 				$weight = intval( $weight ) + 1;
 				$stmt->bindParam( ':weight', $weight, PDO::PARAM_INT );
 
@@ -292,7 +292,7 @@ if( is_file( NV_DOCUMENT_ROOT . $row['image'] ) )
 			}
 			else
 			{
-				$stmt = $db->prepare( 'UPDATE ' . TMS_STORE . '_rows SET title = :title, alias = :alias, catalog = :catalog, sdt =:sdt, email =:email, website =:website, facebook =:facebook, image = :image, images_orther =:images_orther, bodytext = :bodytext, keywords = :keywords, title_seo =:title_seo, bodytext_seo =:bodytext_seo, tinhthanh = :tinhthanh, quanhuyen = :quanhuyen, xaphuong = :xaphuong, duong =:duong, dia_chi = :dia_chi, dia_chi_day_du =:dia_chi_day_du, googmaps=:googmaps WHERE id=' . $row['id'] );
+				$stmt = $db->prepare( 'UPDATE ' . STORE . '_rows SET title = :title, alias = :alias, catalog = :catalog, sdt =:sdt, email =:email, website =:website, facebook =:facebook, image = :image, images_orther =:images_orther, bodytext = :bodytext, keywords = :keywords, title_seo =:title_seo, bodytext_seo =:bodytext_seo, tinhthanh = :tinhthanh, quanhuyen = :quanhuyen, xaphuong = :xaphuong, duong =:duong, dia_chi = :dia_chi, dia_chi_day_du =:dia_chi_day_du, googmaps=:googmaps WHERE id=' . $row['id'] );
 			}
 			$stmt->bindParam( ':title', $row['title'], PDO::PARAM_STR );
 			$stmt->bindParam( ':title_seo', $row['title_seo'], PDO::PARAM_STR );
@@ -340,7 +340,7 @@ if( is_file( NV_DOCUMENT_ROOT . $row['image'] ) )
 }
 elseif( $row['id'] > 0 )
 {
-	$row = $db->query( 'SELECT * FROM ' . TMS_STORE . '_rows WHERE id=' . $row['id'] )->fetch();
+	$row = $db->query( 'SELECT * FROM ' . STORE . '_rows WHERE id=' . $row['id'] )->fetch();
 	$row['googmaps'] = @unserialize( $row['googmaps'] );
 	if( empty( $row ) )
 	{
@@ -396,7 +396,7 @@ if ( ! $nv_Request->isset_request( 'id', 'post,get' ) )
 	$page = $nv_Request->get_int( 'page', 'post,get', 1 );
 	$db->sqlreset()
 		->select( 'COUNT(*)' )
-		->from( '' . TMS_STORE . '_rows' );
+		->from( '' . STORE . '_rows' );
 
 	if( ! empty( $q ) )
 	{

@@ -22,7 +22,7 @@ $xtpl = new XTemplate( 'map.tpl', NV_ROOTDIR . '/themes/' . $module_info['templa
 			$base_url = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
 			
 			$global_array_store = array();
-			$sql = 'SELECT * FROM '. TMS_STORE . '_catalogy WHERE status > 0';
+			$sql = 'SELECT * FROM '. STORE . '_catalogy WHERE status > 0';
 			$list = $nv_Cache->db($sql, 'id', $module_name);
 			if (!empty($list)) {
 				foreach ($list as $l) {
@@ -38,7 +38,7 @@ $xtpl = new XTemplate( 'map.tpl', NV_ROOTDIR . '/themes/' . $module_info['templa
 			{
 				
 				if(!empty($array_op[1]))
-				$catid_search = $db->query('SELECT id FROM '. TMS_STORE . '_catalogy WHERE alias like "%'. $array_op[1] .'%"')->fetchColumn();
+				$catid_search = $db->query('SELECT id FROM '. STORE . '_catalogy WHERE alias like "%'. $array_op[1] .'%"')->fetchColumn();
 				
 				if($catid_search)
 				{
@@ -133,13 +133,13 @@ $xtpl = new XTemplate( 'map.tpl', NV_ROOTDIR . '/themes/' . $module_info['templa
 			
 			
 			
-			// $sql = 'SELECT * FROM '. TMS_STORE . '_rows WHERE status=1 '. $where .' ORDER BY weight DESC';
+			// $sql = 'SELECT * FROM '. STORE . '_rows WHERE status=1 '. $where .' ORDER BY weight DESC';
 			 
 			$per_page = 20;
 			$page = $nv_Request->get_int( 'page', 'post,get', 1 );
 			$db->sqlreset()
 				->select( 'COUNT(*)' )
-				->from( '' . TMS_STORE . '_rows' )
+				->from( '' . STORE . '_rows' )
 				->where('status=1 '. $where);
 			$sth = $db->prepare( $db->sql() );
 
@@ -229,7 +229,7 @@ $xtpl = new XTemplate( 'map.tpl', NV_ROOTDIR . '/themes/' . $module_info['templa
 				}
 			}
 			// xuất danh sách loại sản phẩm ra
-			$sql = 'SELECT id, title, alias FROM '. TMS_STORE . '_catalogy ORDER BY weight ASC';
+			$sql = 'SELECT id, title, alias FROM '. STORE . '_catalogy ORDER BY weight ASC';
 			
 			$result = $db->query( $sql );
 				while( $data = $result->fetch() )
